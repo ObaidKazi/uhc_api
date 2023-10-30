@@ -55,9 +55,9 @@ def uhcEligibilitynBenefits(request_payload):
         'individual_oop_info':{},
         'family_oop_info':{},
         # 'oop_max_info':{},
-        'copy_13':{},
+        'copay_13':{},
         'co_insurance_13':{},
-        'copy_A0':{},
+        'copay_A0':{},
         'co_insurance_A0':{},
         'notes':None
     }
@@ -67,8 +67,8 @@ def uhcEligibilitynBenefits(request_payload):
     if response.status_code == 200:
         data = response.json()
         for policy in data['memberPolicies']:
-            uhc_json_data['Eligibility_Effective_Date']=policy['policyInfo']['eligibilityDates']['startDate']
-            uhc_json_data['Eligibility_Effective_end_date']=policy['policyInfo']['eligibilityDates']['endDate']
+            uhc_json_data['Eligibility_Effective_Date']=policy['policyInfo']['planDates']['startDate']
+            uhc_json_data['Eligibility_Effective_end_date']=policy['policyInfo']['planDates']['endDate']
             uhc_json_data['policyStatus']=policy['policyInfo']['policyStatus']
             uhc_json_data['planName']=policy['insuranceInfo']['planDescription']
             
@@ -154,11 +154,11 @@ def uhcEligibilitynBenefits(request_payload):
         coinsurance_data=response.json()
         for insurance in coinsurance_data['CopayCoInsuranceDetails']['individual']['inNetwork']['services']:
             if insurance['serviceCode']=='13':
-                uhc_json_data['copy_13']=insurance['coPayAmount']
+                uhc_json_data['copay_13']=insurance['coPayAmount']
                 uhc_json_data['co_insurance_13']=insurance['coInsurancePercent']
                 
             if insurance['serviceCode']=='A0':
-                uhc_json_data['copy_A0']=insurance['coPayAmount']
+                uhc_json_data['copay_A0']=insurance['coPayAmount']
                 uhc_json_data['co_insurance_A0']=insurance['coInsurancePercent']
     
     notes="\nCOLONOSCOPY\n\n"
@@ -166,15 +166,15 @@ def uhcEligibilitynBenefits(request_payload):
     notes+="Eff Date - "+uhc_json_data['Eligibility_Effective_Date']+"\n"
     notes+="Plan - "+uhc_json_data['planName']+"\n"
     notes+="\n\nProfessional:\n"
-    notes+="Copay -: "+uhc_json_data['copy_13']+"\n"
-    notes+="Individual Deductible – "+uhc_json_data['individual_deductable'].get('metYtdAmount',"Nothing Met")+"\n"
-    notes+="Family Deductible – "+uhc_json_data['family_deductable'].get('metYtdAmount',"Nothing Met")+"\n"
-    notes+="Co-insurance: "+uhc_json_data['co_insurance_13']+"\n"
-    notes+="\n\nFacility:(ASC)\n\n"
-    notes+="Copay -: "+uhc_json_data['copy_A0']+"\n"
+    notes+="Copay -: "+uhc_json_data['copay_A0']+"\n"
     notes+="Individual Deductible – "+uhc_json_data['individual_deductable'].get('metYtdAmount',"Nothing Met")+"\n"
     notes+="Family Deductible – "+uhc_json_data['family_deductable'].get('metYtdAmount',"Nothing Met")+"\n"
     notes+="Co-insurance: "+uhc_json_data['co_insurance_A0']+"\n"
+    notes+="\n\nFacility:(ASC)\n\n"
+    notes+="Copay -: "+uhc_json_data['copay_13']+"\n"
+    notes+="Individual Deductible – "+uhc_json_data['individual_deductable'].get('metYtdAmount',"Nothing Met")+"\n"
+    notes+="Family Deductible – "+uhc_json_data['family_deductable'].get('metYtdAmount',"Nothing Met")+"\n"
+    notes+="Co-insurance: "+uhc_json_data['co_insurance_13']+"\n"
     notes+="OOP Individual – "+uhc_json_data['individual_oop_info'].get('metYtdAmount',"Nothing Met")+"\n"
     notes+="OOP Family – "+uhc_json_data['family_oop_info'].get('metYtdAmount',"Nothing Met")+"\n"
     uhc_json_data['notes']=notes
