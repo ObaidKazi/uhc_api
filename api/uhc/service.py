@@ -67,8 +67,12 @@ def uhcEligibilitynBenefits(request_payload):
     if response.status_code == 200:
         data = response.json()
         for policy in data['memberPolicies']:
-            uhc_json_data['Eligibility_Effective_Date']=policy['policyInfo']['planDates']['startDate']
-            uhc_json_data['Eligibility_Effective_end_date']=policy['policyInfo']['planDates']['endDate']
+            Eligibility_Effective_Date = datetime.strptime(str(policy['policyInfo']['planDates']['startDate']), '%Y-%m-%d')
+            Eligibility_Effective_end_date = datetime.strptime(str(policy['policyInfo']['planDates']['endDate']), '%Y-%m-%d')
+            uhc_json_data['Eligibility_Effective_Date']=Eligibility_Effective_Date
+            uhc_json_data['Eligibility_Effective_end_date']=Eligibility_Effective_end_date
+            
+    
             uhc_json_data['policyStatus']=policy['policyInfo']['policyStatus']
             uhc_json_data['planName']=policy['insuranceInfo']['planDescription']
             
