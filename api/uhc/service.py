@@ -32,13 +32,13 @@ def uhcEligibilitynBenefits(request_payload):
 
     eligibility_api_params = {
         "payerID": "87726",
-        "dateOfBirth": datetime.strptime(payload['dateOfBirth'],'%d/%m/%Y').date(),
+        "dateOfBirth": datetime.strptime(payload['dateOfBirth'],'%m/%d/%Y').date(),
         "memberId": payload['SubscriberID'],
         "providerLastName": lastName,
         "npi": payload['NPI'],
         "searchOption": 'MemberIDDateOfBirth',
-        "ServiceEnd":datetime.strptime(payload['DOS'],'%d/%m/%Y').date(),
-        "ServiceStart":datetime.strptime(payload['DOS'],'%d/%m/%Y').date()
+        "ServiceEnd":datetime.strptime(payload['DOS'],'%m/%d/%Y').date(),
+        "ServiceStart":datetime.strptime(payload['DOS'],'%m/%d/%Y').date()
     }
     response = requests.get(eligibility_api, headers=headers,params=eligibility_api_params)
     
@@ -69,8 +69,8 @@ def uhcEligibilitynBenefits(request_payload):
         for policy in data['memberPolicies']:
             Eligibility_Effective_Date = datetime.strptime(str(policy['policyInfo']['planDates']['startDate']), '%Y-%m-%d')
             Eligibility_Effective_end_date = datetime.strptime(str(policy['policyInfo']['planDates']['endDate']), '%Y-%m-%d')
-            uhc_json_data['Eligibility_Effective_Date']=Eligibility_Effective_Date.strftime('%d/%m/%Y')
-            uhc_json_data['Eligibility_Effective_end_date']=Eligibility_Effective_end_date.strftime('%d/%m/%Y')
+            uhc_json_data['Eligibility_Effective_Date']=Eligibility_Effective_Date.strftime('%m/%d/%Y')
+            uhc_json_data['Eligibility_Effective_end_date']=Eligibility_Effective_end_date.strftime('%m/%d/%Y')
             
     
             uhc_json_data['policyStatus']=policy['policyInfo']['policyStatus']

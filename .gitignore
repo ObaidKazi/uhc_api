@@ -1,6 +1,6 @@
 *.log
-api/root_app/__pycache__
-api/uhc/__pycache__
-schema/__pycache__
-common/__pycache__
-__pycache__
+/api/root_app/__pycache__
+/api/uhc/__pycache__
+/schema/__pycache__
+/common/__pycache__
+/__pycache__
