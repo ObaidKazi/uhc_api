@@ -69,8 +69,8 @@ def uhcEligibilitynBenefits(request_payload):
         for policy in data['memberPolicies']:
             Eligibility_Effective_Date = datetime.strptime(str(policy['policyInfo']['planDates']['startDate']), '%Y-%m-%d')
             Eligibility_Effective_end_date = datetime.strptime(str(policy['policyInfo']['planDates']['endDate']), '%Y-%m-%d')
-            uhc_json_data['Eligibility_Effective_Date']=Eligibility_Effective_Date
-            uhc_json_data['Eligibility_Effective_end_date']=Eligibility_Effective_end_date
+            uhc_json_data['Eligibility_Effective_Date']=Eligibility_Effective_Date.strftime('%d/%m/%Y')
+            uhc_json_data['Eligibility_Effective_end_date']=Eligibility_Effective_end_date.strftime('%d/%m/%Y')
             
     
             uhc_json_data['policyStatus']=policy['policyInfo']['policyStatus']
@@ -168,8 +168,7 @@ def uhcEligibilitynBenefits(request_payload):
     notes="\nCOLONOSCOPY\n\n"
     dos_object = datetime.strptime(str(payload['DOS']), '%Y-%m-%d')
     notes+="DOS - "+dos_object.strftime('%d/%m/%Y')+"\n"
-    effective_date_object = datetime.strptime(uhc_json_data['Eligibility_Effective_Date'], '%Y-%m-%d')
-    notes+="Eff Date - "+effective_date_object.strftime('%d/%m/%Y')+"\n"
+    notes+="Eff Date - "+uhc_json_data['Eligibility_Effective_Date']+"\n"
     notes+="Plan - "+uhc_json_data['planName']+"\n"
     notes+="\n\nProfessional:\n"
     notes+="Copay -: "+uhc_json_data['copay_A0']+"\n"
@@ -207,7 +206,7 @@ def uhcEligibilitynBenefits(request_payload):
         notes+="OOP Family – "+uhc_json_data['family_oop_info']['planAmount']+" ("+uhc_json_data['family_oop_info'].get('metYtdAmount')+" Met )"+"\n"
     
     uhc_json_data['notes']=notes
-    print(notes)
+    
     return uhc_json_data
                 
         
