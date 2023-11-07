@@ -32,13 +32,13 @@ def uhcEligibilitynBenefits(request_payload):
 
     eligibility_api_params = {
         "payerID": "87726",
-        "dateOfBirth": payload['dateOfBirth'],
+        "dateOfBirth": datetime.strptime(payload['dateOfBirth'],'%d/%m/%Y').date(),
         "memberId": payload['SubscriberID'],
         "providerLastName": lastName,
         "npi": payload['NPI'],
         "searchOption": 'MemberIDDateOfBirth',
-        "ServiceEnd":payload['DOS'],
-        "ServiceStart":payload['DOS']
+        "ServiceEnd":datetime.strptime(payload['DOS'],'%d/%m/%Y').date(),
+        "ServiceStart":datetime.strptime(payload['DOS'],'%d/%m/%Y').date()
     }
     response = requests.get(eligibility_api, headers=headers,params=eligibility_api_params)
     
@@ -166,8 +166,7 @@ def uhcEligibilitynBenefits(request_payload):
                 uhc_json_data['co_insurance_A0']=insurance['coInsurancePercent']
     
     notes="\nCOLONOSCOPY\n\n"
-    dos_object = datetime.strptime(str(payload['DOS']), '%Y-%m-%d')
-    notes+="DOS - "+dos_object.strftime('%d/%m/%Y')+"\n"
+    notes+="DOS - "+str(payload['DOS'])+"\n"
     notes+="Eff Date - "+uhc_json_data['Eligibility_Effective_Date']+"\n"
     notes+="Plan - "+uhc_json_data['planName']+"\n"
     notes+="\n\nProfessional:\n"
