@@ -1,9 +1,20 @@
-from fastapi import APIRouter,Response
+from fastapi import APIRouter,HTTPException
 uhc_route = APIRouter()
 from .import service as uhc_service
+from common import helper as common_helper
 import schema.uhcEligibilitynBenefits_schema as eligibility_n_benefits_schema
 @uhc_route.post("/getUhcEligibilitynBenefits")
 def root(request:eligibility_n_benefits_schema.UHCEligibilitynBenefits):
-    return uhc_service.uhcEligibilitynBenefits(request)
+    try:
+        return uhc_service.uhcEligibilitynBenefits(request)
+    except Exception as e:
+        common_helper.logger.error(str(e))
+        if type(e)==ValueError:
+            raise HTTPException(status_code=422,detail=str(e))
+        else:
+            raise HTTPException(status_code=500,detail='Something went wrong')
+        
+        
+        
 
 

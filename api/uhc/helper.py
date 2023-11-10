@@ -13,13 +13,13 @@ def getApiToken(api_url):
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     response = requests.post(api_url, data=payload,headers=headers)
-    common_helper.logger.debug("logger")
+    
     if response.status_code==200:
         token_data=response.json()
         return token_data['access_token']
     else:
         common_helper.logger.debug(response.text)
-        common_helper.logger.debug("test")
+        
 
     
     
