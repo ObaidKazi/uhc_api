@@ -179,47 +179,63 @@ def uhcEligibilitynBenefits(request_payload):
         notes+="Eff Date - "+uhc_json_data['Eligibility_Effective_Date']+"\n"
         notes+="Plan - "+uhc_json_data['planName']+"\n"
         notes+="\n\nProfessional:\n"
-        notes+="Copay -: "+uhc_json_data['copay_A0']+"\n"
+        if uhc_json_data['copay_A0']!={}:
+            notes+="Copay -: "+uhc_json_data['copay_A0']+" $\n"
+        else:
+            notes+="Copay -: \n"
         if uhc_json_data['individual_deductable']!={}:
             if uhc_json_data['individual_deductable'].get('metYtdAmount')!='' and uhc_json_data['individual_deductable'].get('metYtdAmount')!=None and float(uhc_json_data['individual_deductable'].get('metYtdAmount'))==0:
-                notes+="Individual Deductible - "+uhc_json_data['individual_deductable']['planAmount']+" (Nothing Met)"+"\n"
+                notes+="Individual Deductible - "+uhc_json_data['individual_deductable']['planAmount']+"$ (Nothing Met)"+"\n"
             elif uhc_json_data['individual_deductable'].get('metYtdAmount')!='' and uhc_json_data['individual_deductable'].get('metYtdAmount')!=None and float(uhc_json_data['individual_deductable'].get('metYtdAmount'))==float(uhc_json_data['individual_deductable']['planAmount']):
-                notes+="Individual Deductible - "+uhc_json_data['individual_deductable']['planAmount']+" (Fully Met)"+"\n"
+                notes+="Individual Deductible - "+uhc_json_data['individual_deductable']['planAmount']+"$ (Fully Met)"+"\n"
             else:
-                notes+="Individual Deductible - "+uhc_json_data['individual_deductable']['planAmount']+" ("+uhc_json_data['individual_deductable'].get('metYtdAmount')+" Met )"+"\n"
+                notes+="Individual Deductible - "+uhc_json_data['individual_deductable']['planAmount']+"$ ("+uhc_json_data['individual_deductable'].get('metYtdAmount')+"$ Met )"+"\n"
         else:
              notes+="Individual Deductible - "
 
         if  uhc_json_data['family_deductable']!={}:   
             if uhc_json_data['family_deductable'].get('metYtdAmount')!='' and uhc_json_data['family_deductable'].get('metYtdAmount')!=None and float(uhc_json_data['family_deductable'].get('metYtdAmount'))==0:
-                notes+="Family Deductible - "+uhc_json_data['family_deductable']['planAmount']+" (Nothing Met)"+"\n"
+                notes+="Family Deductible - "+uhc_json_data['family_deductable']['planAmount']+"$ (Nothing Met)"+"\n"
             elif uhc_json_data['family_deductable'].get('metYtdAmount')!='' and uhc_json_data['family_deductable'].get('metYtdAmount')!=None and float(uhc_json_data['family_deductable'].get('metYtdAmount'))==float(uhc_json_data['family_deductable']['planAmount']):
-                notes+="Family Deductible - "+uhc_json_data['family_deductable']['planAmount']+" (Fully Met)"+"\n"
+                notes+="Family Deductible - "+uhc_json_data['family_deductable']['planAmount']+"$ (Fully Met)"+"\n"
             else:
-                notes+="Family Deductible - "+uhc_json_data['family_deductable'].get('planAmount')+" ("+uhc_json_data['family_deductable'].get('metYtdAmount')+" Met )"+"\n"
+                notes+="Family Deductible - "+uhc_json_data['family_deductable'].get('planAmount')+"$ ("+uhc_json_data['family_deductable'].get('metYtdAmount')+"$ Met )"+"\n"
         else:
             notes+="Family Deductible - "
 
-        notes+="Co-insurance: "+uhc_json_data['co_insurance_A0']+"\n"
+        if uhc_json_data['co_insurance_A0']!={}:
+
+            notes+="Co-insurance: "+uhc_json_data['co_insurance_A0']+"$ \n"
+        else:
+            notes+="Co-insurance: \n"
+
         notes+="\n\nFacility:(ASC)\n\n"
-        notes+="Copay -: "+uhc_json_data['copay_13']+"\n"
-        notes+="Co-insurance: "+uhc_json_data['co_insurance_13']+"\n"
+
+        if uhc_json_data['copay_13']!={}:
+            notes+="Copay -: "+uhc_json_data['copay_13']+"$ \n"
+        else:
+            notes+="Copay -: \n"
+        
+        if uhc_json_data['co_insurance_13']!={}:
+            notes+="Co-insurance: "+uhc_json_data['co_insurance_13']+"$ \n"
+        else:
+            notes+="Co-insurance: \n"
         if uhc_json_data['individual_oop_info']!={}:
             if uhc_json_data['individual_oop_info'].get('metYtdAmount')!='' and uhc_json_data['individual_oop_info'].get('metYtdAmount')!=None and float(uhc_json_data['individual_oop_info'].get('metYtdAmount'))==0:
-                notes+="OOP Individual – "+uhc_json_data['individual_oop_info']['planAmount']+" (Nothing Met)"+"\n"
+                notes+="OOP Individual – "+uhc_json_data['individual_oop_info']['planAmount']+"$ (Nothing Met)"+"\n"
             elif uhc_json_data['individual_oop_info'].get('metYtdAmount')!='' and uhc_json_data['individual_oop_info'].get('metYtdAmount')!=None and float(uhc_json_data['individual_oop_info'].get('metYtdAmount'))==float(uhc_json_data['individual_oop_info']['planAmount']):
-                notes+="OOP Individual – "+uhc_json_data['individual_oop_info']['planAmount']+" (Fully Met)"+"\n"
+                notes+="OOP Individual – "+uhc_json_data['individual_oop_info']['planAmount']+"$ (Fully Met)"+"\n"
             else:
-                notes+="OOP Individual – "+uhc_json_data['individual_oop_info']['planAmount']+" ("+uhc_json_data['individual_oop_info'].get('metYtdAmount')+" Met )"+"\n"
+                notes+="OOP Individual – "+uhc_json_data['individual_oop_info']['planAmount']+"$ ("+uhc_json_data['individual_oop_info'].get('metYtdAmount')+"$ Met )"+"\n"
         else:
             notes+="OOP Individual – "
         if uhc_json_data['family_oop_info']!={}:
             if uhc_json_data['family_oop_info'].get('metYtdAmount')!='' and uhc_json_data['family_oop_info'].get('metYtdAmount')!=None and float(uhc_json_data['family_oop_info'].get('metYtdAmount'))==0:
-                notes+="OOP Family – "+uhc_json_data['family_oop_info']['planAmount']+" (Nothing Met)"+"\n"
+                notes+="OOP Family – "+uhc_json_data['family_oop_info']['planAmount']+"$ (Nothing Met)"+"\n"
             elif uhc_json_data['family_oop_info'].get('metYtdAmount')!='' and uhc_json_data['family_oop_info'].get('metYtdAmount')!=None and float(uhc_json_data['family_oop_info'].get('metYtdAmount'))==float(uhc_json_data['family_oop_info']['planAmount']):
-                notes+="OOP Family – "+uhc_json_data['family_oop_info']['planAmount']+" (Fully Met)"+"\n"
+                notes+="OOP Family – "+uhc_json_data['family_oop_info']['planAmount']+"$ (Fully Met)"+"\n"
             else:
-                notes+="OOP Family – "+uhc_json_data['family_oop_info']['planAmount']+" ("+uhc_json_data['family_oop_info'].get('metYtdAmount')+" Met )"+"\n"
+                notes+="OOP Family – "+uhc_json_data['family_oop_info']['planAmount']+"$ ("+uhc_json_data['family_oop_info'].get('metYtdAmount')+"$ Met )"+"\n"
         else:
             notes+="OOP Family – "
         uhc_json_data['notes']=notes
