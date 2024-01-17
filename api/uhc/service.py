@@ -67,6 +67,7 @@ def uhcEligibilitynBenefits(request_payload):
         'first_name':None,
         'last_name':None,
         'payer_id':None,
+        'payer_name':None,
         'notes':None
     }
 
@@ -94,6 +95,8 @@ def uhcEligibilitynBenefits(request_payload):
             uhc_json_data['planName']=policy['insuranceInfo']['planDescription']
             uhc_json_data['subscriber_id']=policy['insuranceInfo']['memberId']
             uhc_json_data['payer_id']=policy['insuranceInfo']['payerId']
+            uhc_json_data['payer_name']=policy['insuranceInfo']['payerName']
+            
             
             if policy['deductibleInfo']['found']==True:
                 if policy['deductibleInfo']['individual']['found']==True:
