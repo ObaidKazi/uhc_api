@@ -10,6 +10,7 @@ def uhcEligibilitynBenefits(request_payload):
     eligibility_api=uhc_config.eligibility_api
     token_api=uhc_config.token_api
     copay_additional_coinsurance_details_api=uhc_config.copay_additional_coinsurance_details_api
+    copay_coinsurance_details_api=uhc_config.copay_coinsurance_details_api
     
     #getting token 
     token=uhc_helper.getApiToken(token_api)
@@ -59,6 +60,13 @@ def uhcEligibilitynBenefits(request_payload):
         'co_insurance_13':{},
         'copay_A0':{},
         'co_insurance_A0':{},
+        'copay_specialist':{},
+        'co_insurance_specialist':{},
+        'subscriber_id':None,
+        'date_of_birth':None,
+        'first_name':None,
+        'last_name':None,
+        'payer_id':None,
         'notes':None
     }
 
@@ -84,6 +92,8 @@ def uhcEligibilitynBenefits(request_payload):
     
             uhc_json_data['policyStatus']=policy['policyInfo']['policyStatus']
             uhc_json_data['planName']=policy['insuranceInfo']['planDescription']
+            uhc_json_data['subscriber_id']=policy['insuranceInfo']['memberId']
+            uhc_json_data['payer_id']=policy['insuranceInfo']['payerId']
             
             if policy['deductibleInfo']['found']==True:
                 if policy['deductibleInfo']['individual']['found']==True:
@@ -144,6 +154,10 @@ def uhcEligibilitynBenefits(request_payload):
             for patient in policy['patientInfo']:
                 if patient.get('patientKey')!=None:
                     uhc_json_data['patientKey']=patient['patientKey']
+                    uhc_json_data['first_name']=patient['firstName']
+                    uhc_json_data['last_name']=patient['lastName']
+                    uhc_json_data['date_of_birth']=patient['dateOfBirth']
+                    
                     break
             break
     else:
@@ -158,14 +172,14 @@ def uhcEligibilitynBenefits(request_payload):
         serviceTypeCodes='13,A0'
     coinsurance_details_api_params = {
         "patientKey": uhc_json_data['patientKey'],
-        "serviceTypeCodes": serviceTypeCodes,
-        
+        "serviceTypeCodes": serviceTypeCodes,     
     }
-    response = requests.get(copay_additional_coinsurance_details_api, headers=headers,params=coinsurance_details_api_params)
-    if response.status_code==200:
+    copay_additional_coinsurance_details_response = requests.get(copay_additional_coinsurance_details_api, headers=headers,params=coinsurance_details_api_params)
+    
+    if copay_additional_coinsurance_details_response.status_code==200:
         
-        coinsurance_data=response.json()
-        for insurance in coinsurance_data['CopayCoInsuranceDetails']['individual']['inNetwork']['services']:
+        coinsurance_additional_details_data=copay_additional_coinsurance_details_response.json()
+        for insurance in coinsurance_additional_details_data['CopayCoInsuranceDetails']['individual']['inNetwork']['services']:
             if insurance['serviceCode']=='13':
                 uhc_json_data['copay_13']=insurance['coPayAmount']
                 uhc_json_data['co_insurance_13']=insurance['coInsurancePercent']+"%"
@@ -175,6 +189,7 @@ def uhcEligibilitynBenefits(request_payload):
                 uhc_json_data['co_insurance_A0']=insurance['coInsurancePercent']+"%"
     
         # notes="\nCOLONOSCOPY"
+        
         notes="\nDOS - "+str(payload['DOS'])+"\n"
         notes+="Eff Date - "+uhc_json_data['Eligibility_Effective_Date']+"\n"
         notes+="Plan - "+uhc_json_data['planName']+"\n"
@@ -250,7 +265,17 @@ def uhcEligibilitynBenefits(request_payload):
         else:
             notes+="OOP Family – No"
         uhc_json_data['notes']=notes
-        print(uhc_json_data['notes'])
+    coinsurance_details_api_params = {
+        "patientKey": uhc_json_data['patientKey'],
+        "serviceTypeCodes": "96",     
+    }
+    copay_coinsurance_details_response = requests.get(copay_coinsurance_details_api, headers=headers,params=coinsurance_details_api_params)
+    if copay_coinsurance_details_response.status_code==200:
+        coinsurance_details_data=copay_coinsurance_details_response.json()
+        for insurance in coinsurance_details_data['CopayCoInsuranceDetails']['individual']['inNetwork']['services']:
+            if insurance['service']=='specialist':
+                uhc_json_data['copay_specialist']=insurance['coPayAmount']
+                uhc_json_data['co_insurance_specialist']=insurance['coInsurancePercent']+"%"
         
     return uhc_json_data
                 

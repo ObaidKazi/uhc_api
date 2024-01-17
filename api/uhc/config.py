@@ -2,6 +2,8 @@ eligibility_api="https://apimarketplace.uhc.com/Eligibility/api/appservices/elig
 
 copay_additional_coinsurance_details_api="https://apimarketplace.uhc.com/Eligibility/api/appservices/copayAdditionalCoinsuranceDetailsV4"
 
+copay_coinsurance_details_api="https://apimarketplace.uhc.com/Eligibility/api/appservices/copayCoinsuranceDetailsV4"
+
 token_api="https://apimarketplace.uhc.com/v1/oauthtoken"
 
 client_id="8ab22fb1-aea9-4457-89f1-78ca2057d5ce"
