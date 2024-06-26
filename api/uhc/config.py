@@ -1,8 +1,8 @@
-eligibility_api="https://apimarketplace.uhc.com/Eligibility/api/appservices/eligibility/v2.0"
+eligibility_api="https://apimarketplace.uhc.com/Eligibility/api/external/member/eligibility/v3.0"
 
-copay_additional_coinsurance_details_api="https://apimarketplace.uhc.com/Eligibility/api/appservices/copayAdditionalCoinsuranceDetailsV4"
+copay_additional_coinsurance_details_api="https://apimarketplace.uhc.com/Eligibility/api/appservices/copayAdditionalCoinsuranceDetails/v5.0"
 
-copay_coinsurance_details_api="https://apimarketplace.uhc.com/Eligibility/api/appservices/copayCoinsuranceDetailsV4"
+copay_coinsurance_details_api="https://apimarketplace.uhc.com/Eligibility/api/appservices/copayCoinsuranceDetails/v5.0"
 
 token_api="https://apimarketplace.uhc.com/v1/oauthtoken"
 

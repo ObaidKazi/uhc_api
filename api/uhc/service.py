@@ -1,4 +1,4 @@
-
+import json
 import requests
 from . import config as uhc_config
 from . import helper as uhc_helper
@@ -33,15 +33,15 @@ def uhcEligibilitynBenefits(request_payload):
 
     eligibility_api_params = {
         "payerID": "87726",
-        "dateOfBirth": datetime.strptime(payload['dateOfBirth'],'%m/%d/%Y').date(),
+        "dateOfBirth": str(datetime.strptime(payload['dateOfBirth'],'%m/%d/%Y').date()),
         "memberId": payload['SubscriberID'],
         "providerLastName": lastName,
         "npi": payload['NPI'],
         "searchOption": 'MemberIDDateOfBirth',
-        "ServiceEnd":datetime.strptime(payload['DOS'],'%m/%d/%Y').date(),
-        "ServiceStart":datetime.strptime(payload['DOS'],'%m/%d/%Y').date()
+        "ServiceEnd":str(datetime.strptime(payload['DOS'],'%m/%d/%Y').date()),
+        "ServiceStart":str(datetime.strptime(payload['DOS'],'%m/%d/%Y').date())
     }
-    response = requests.get(eligibility_api, headers=headers,params=eligibility_api_params)
+    response = requests.post(eligibility_api, headers=headers,json=eligibility_api_params)
     
     #declaring filter data key
     uhc_json_data={
@@ -177,7 +177,7 @@ def uhcEligibilitynBenefits(request_payload):
         "patientKey": uhc_json_data['patientKey'],
         "serviceTypeCodes": serviceTypeCodes,     
     }
-    copay_additional_coinsurance_details_response = requests.get(copay_additional_coinsurance_details_api, headers=headers,params=coinsurance_details_api_params)
+    copay_additional_coinsurance_details_response = requests.post(copay_additional_coinsurance_details_api, headers=headers,json=coinsurance_details_api_params)
     
     if copay_additional_coinsurance_details_response.status_code==200:
         
@@ -281,7 +281,7 @@ def uhcEligibilitynBenefits(request_payload):
         "patientKey": uhc_json_data['patientKey'],
         "serviceTypeCodes": "96",     
     }
-    copay_coinsurance_details_response = requests.get(copay_coinsurance_details_api, headers=headers,params=coinsurance_details_api_params)
+    copay_coinsurance_details_response = requests.post(copay_coinsurance_details_api, headers=headers,json=coinsurance_details_api_params)
     if copay_coinsurance_details_response.status_code==200:
         coinsurance_details_data=copay_coinsurance_details_response.json()
         for insurance in coinsurance_details_data['CopayCoInsuranceDetails']['individual']['inNetwork']['services']:
